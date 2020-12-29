@@ -23,8 +23,9 @@ RUN apt-get update -y
 RUN apt-get install vim -y
 
 COPY app/requirements.txt .
+COPY app/requirements-dev.txt .
 RUN pip install -r requirements.txt
-RUN pip install pgcli ipython
+RUN pip install -r requirements-dev.txt
 
 RUN echo '\n\
 set nocompatible\n\

@@ -1,5 +1,6 @@
-import falcon
 import os
+
+import falcon
 
 FAL_VER = os.environ["FAL_VER"]
 

@@ -11,7 +11,7 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
-push: export FAL_VER=9
+push: export FAL_VER=10
 push:
 	@docker build --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
 	@docker push farshidashouri/fal:$(FAL_VER)
@@ -25,3 +25,29 @@ ping:
 
 shell:
 	@docker-compose exec web bash
+
+db-up:
+	@docker-compose exec web alembic upgrade head
+
+db-down:
+	@docker-compose exec web alembic downgrade base
+
+db-migration-state:
+	@docker-compose exec web alembic current
+
+db-migration-history:
+	@docker-compose exec web alembic history --verbose
+
+ipython:
+	@docker-compose exec web ipython 
+
+lint:
+	@docker-compose exec web pylint -j 2 /app/dev
+
+logs:
+	@docker-compose logs -t -f --tail=all web
+
+fmt:
+	@docker-compose exec web isort -w 99 -m 3 --trailing-comma .
+	@docker-compose exec web black -l 99 .
+	@docker-compose exec web mypy /app/dev

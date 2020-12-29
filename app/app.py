@@ -18,4 +18,4 @@ class QuoteResource:
 
 
 application = falcon.API()
-application.add_route("/", QuoteResource())
+application.add_route("/ping", QuoteResource())

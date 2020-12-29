@@ -11,7 +11,7 @@ RUN pip install -r requirements.txt
 
 EXPOSE 80
 
-ENTRYPOINT ["gunicorn", "app", "-b", "0.0.0.0:80", "-w", "4"]
+ENTRYPOINT ["gunicorn", "app", "-b", "0.0.0.0:80", "-w", "4", "--log-level", "debug"]
 
 
 
@@ -34,4 +34,4 @@ syntax on' \
 
 EXPOSE 80
 
-ENTRYPOINT ["gunicorn", "app", "-b", "0.0.0.0:80", "--reload"]
+ENTRYPOINT ["gunicorn", "app", "-b", "0.0.0.0:80", "--reload", "--log-level", "debug"]

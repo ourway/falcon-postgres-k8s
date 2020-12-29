@@ -11,7 +11,7 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
-push: export FAL_VER=15
+push: export FAL_VER=19
 push:
 	@docker build -f Dockerfile.app --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
 	@docker build -f Dockerfile.frontend --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/sapper-frontend:$(FAL_VER) .
@@ -27,7 +27,7 @@ status:
 	@kubectl get deployments,services,ingress -o wide --namespace=first
 
 ping:
-	@curl -fsSL 192.168.64.20:30009 | json_pp
+	@curl -fsSL app.fleetman.com/api/v1/ping | json_pp
 
 shell:
 	@docker-compose exec web bash

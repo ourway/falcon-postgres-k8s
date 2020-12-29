@@ -9,7 +9,7 @@ class QuoteResource:
         """Handles GET requests"""
         quote = {
             "quote": ("I've always been more interested in " "the future than in the past."),
-            "author": "Grace Hopper",
+            "author": "Farshid Ashouri",
             "version": FAL_VER,
         }
 

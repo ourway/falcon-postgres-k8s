@@ -1,0 +1,16 @@
+FROM node AS deployment
+WORKDIR /frontend
+
+COPY frontend/. .
+
+RUN npm install
+RUN npm run build
+
+EXPOSE 3000
+ENTRYPOINT ["node", "__sapper__/build"]
+
+FROM node AS local
+WORKDIR /frontend/dev
+
+EXPOSE 3000
+ENTRYPOINT ["npm", "run", "dev"]

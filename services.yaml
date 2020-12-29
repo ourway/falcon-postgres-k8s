@@ -7,11 +7,29 @@ spec:
   # this defines which pods are going to be represented by the service.
   selector:
     label-name: webapp
-    release: "latest"
+    release: "{{FAL_VER}}"
   ports:
   - name: http
     port: 80
     nodePort: 30009
+
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-frontend
+
+spec:
+  # this defines which pods are going to be represented by the service.
+  selector:
+    label-name: frontend
+    release: "{{FAL_VER}}"
+  ports:
+  - name: http
+    port: 3000
+    nodePort: 30012
 
   type: NodePort
 

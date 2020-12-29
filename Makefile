@@ -11,14 +11,20 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
-push: export FAL_VER=10
+push: export FAL_VER=15
 push:
-	@docker build --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
+	@docker build -f Dockerfile.app --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
+	@docker build -f Dockerfile.frontend --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/sapper-frontend:$(FAL_VER) .
 	@docker push farshidashouri/fal:$(FAL_VER)
+	@docker push farshidashouri/sapper-frontend:$(FAL_VER)
 	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
+	@kubectl rollout status --namespace=first deployment webapp
+	@kubectl rollout status --namespace=first deployment frontend
+	@make status
+	@make ping
 
 status:
-	@kubectl get deployments,services -o wide --namespace=first
+	@kubectl get deployments,services,ingress -o wide --namespace=first
 
 ping:
 	@curl -fsSL 192.168.64.20:30009 | json_pp

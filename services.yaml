@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: fleetman-webapp
+  name: london-man-webapp
 
 spec:
   # this defines which pods are going to be represented by the service.
@@ -12,7 +12,7 @@ spec:
   ports:
   - name: http
     port: 80
-    nodePort: 30009
+    targetPort: 80
 
   type: NodePort
 
@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fleetman-frontend
+  name: london-man-frontend
 
 spec:
   # this defines which pods are going to be represented by the service.
@@ -30,40 +30,6 @@ spec:
   ports:
   - name: http
     port: 3000
-    nodePort: 30012
-
-  type: NodePort
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fleetman-queue
-
-spec:
-  # this defines which pods are going to be represented by the service.
-  selector:
-    label-name: queue
-  ports:
-  - name: http
-    port: 8161 
-    nodePort: 30010
-
-  type: NodePort
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fleetman-rabbitmq
-
-spec:
-  # this defines which pods are going to be represented by the service.
-  selector:
-    label-name: rabbitmq
-  ports:
-  - name: http
-    port: 15672 
-    nodePort: 30011
+    targetPort: 3000
 
   type: NodePort

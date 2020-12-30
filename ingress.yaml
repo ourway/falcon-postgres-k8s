@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fleetman-ingress
+  name: london-man-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/add-base-url: "true"
@@ -15,27 +15,24 @@ metadata:
 spec:
   tls:
     - hosts:
-      - app.fleetman.com
-      secretName: fleetman.tls
+      - app.london-man.com
+      secretName: london-man.tls
   rules:
-  - host: "app.fleetman.com"
+  - host: app.london-man.com
     http:
       paths:
       - pathType: Prefix
         path: /(.*)
         backend:
           service:
-            name: fleetman-frontend
+            name: london-man-frontend
             port:
               number: 3000
 
-  - host: "app.fleetman.com"
-    http:
-      paths:
       - pathType: Prefix
         path: /api/v1/(.+)
         backend:
           service:
-            name: fleetman-webapp
+            name: london-man-webapp
             port:
               number: 80

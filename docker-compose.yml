@@ -24,7 +24,7 @@ services:
     image: nginx:latest
     container_name: production_nginx
     volumes:
-      - ./fleetman-nginx.conf:/etc/nginx/conf.d/dev.fleetman.com.conf:ro
+      - ./london-man-nginx.conf:/etc/nginx/conf.d/dev.london-man.com.conf:ro
       - ./cert:/etc/nginx/cert
     ports:
       - 80:80

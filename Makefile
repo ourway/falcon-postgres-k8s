@@ -23,19 +23,20 @@ push:
 	@docker push farshidashouri/fal:$(FAL_VER)
 	@docker push farshidashouri/sapper-frontend:$(FAL_VER)
 	@kubectl create configmap -n first webapp-envs --from-env-file .env --dry-run -o yaml | kubectl apply -n first -f -
-	@kubectl create secret tls fleetman.tls --key cert/key.pem --cert cert/cert.pem -n first --dry-run -o yaml | kubectl apply -n first -f -
-	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
+	@kubectl create secret tls london-man.tls --key cert/key.pem --cert cert/cert.pem -n first --dry-run -o yaml | kubectl apply -n first -f -
+	@make apply
 	@kubectl rollout status --namespace=first deployment webapp
 	@kubectl rollout status --namespace=first deployment frontend
 	@make status
-	@sleep 10
-	@make ping
+
+apply:
+	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
 
 status:
 	@kubectl get deployments,services,ingress -o wide --namespace=first
 
 ping:
-	@curl -fsSL app.fleetman.com/api/v1/ping | json_pp
+	@curl -fsSL app.london-man.com/api/v1/ping | json_pp
 
 shell:
 	@docker-compose exec web bash

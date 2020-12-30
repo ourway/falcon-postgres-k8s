@@ -51,7 +51,7 @@ lint:
 	@docker-compose exec web pylint -j 2 /app/dev
 
 logs:
-	@docker-compose logs -t -f --tail=all web
+	@docker-compose logs -t -f --tail=all
 
 fmt:
 	@docker-compose exec web isort -w 99 -m 3 --trailing-comma .

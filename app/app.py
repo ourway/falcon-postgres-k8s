@@ -6,7 +6,7 @@ FAL_VER = os.environ["FAL_VER"]
 
 
 class QuoteResource:
-    def on_get(self, req, resp):
+    def on_get(self, req: falcon.Request, resp: falcon.Response) -> None:
         """Handles GET requests"""
         quote = {
             "quote": ("I've always been more interested in " "the future than in the past."),

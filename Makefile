@@ -57,3 +57,7 @@ fmt:
 	@docker-compose exec web isort -w 99 -m 3 --trailing-comma .
 	@docker-compose exec web black -l 99 .
 	@docker-compose exec web mypy /app/dev
+	@make frontend-fmt
+
+frontend-fmt:
+	@docker-compose exec frontend node node_modules/prettier/bin-prettier.js --write --svelte-sort-order scripts-markup-styles ./**/*.svelte

@@ -20,16 +20,27 @@ services:
     networks:
       - fal
 
+  nginx: 
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+      - ./fleetman-nginx.conf:/etc/nginx/conf.d/dev.fleetman.com.conf:ro
+      - ./cert:/etc/nginx/cert
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    networks:
+      - fal
+
   web:
     build:
       context: .
       dockerfile: Dockerfile.app
-      target: local 
+      target: local
 
     env_file: 
       - .env
-    ports:
-      - "8001:80"
     restart: always
 
     volumes:

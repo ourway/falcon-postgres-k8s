@@ -11,9 +11,12 @@ then restart the browser.
 
 After than, generate the cert in cert folder:
 ```bash
-mkcert app.fleetman.com fleetman.com "*.fleetman.com" app.london-man.com london-man.com "*.london-man.com" example.test localhost 127.0.0.1 ::1
+cd cert
+mkcert app.fleetman.com fleetman.com "*.fleetman.com" dev.fleetman.com
+mv app.fleetman.com+3-key.pem key.pem
+mv app.fleetman.com+3.pem cert.pem
 ```
-rename generated files to simple ones push it to secrets:
+and push it to secrets
 ```bash
 kubectl create secret tls app.fleetman.com.tls --key key.pem --cert cert.pem -n first
 ```

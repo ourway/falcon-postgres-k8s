@@ -17,7 +17,7 @@ onMount(async () => {
 
 <figure>
   <img alt="Success Kid" src="{successkid}" />
-  <figcaption>Have fun with Sapper my amigi</figcaption>
+  <figcaption>Have fun with Sapper</figcaption>
 </figure>
 
 <p>

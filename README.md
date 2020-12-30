@@ -1,4 +1,20 @@
-install the following:
+```bash
+brew install kubectl
+brew install minikube
+brew install gsed
+brew install hyperkit
+```
+after installing minikube, create a cluster:
+```bash
+inikube config set driver hyperkit
+minikube delete
+minikube start --vm=true
+minikube addons enable ingress 
+minikube addons enable ingress-dns
+minikube addons enable logviewer
+minikube status
+```
+install certificate related tools
 ```bash
 brew install nss
 brew install mkcert
@@ -12,27 +28,15 @@ then restart the browser.
 After than, generate the cert in cert folder:
 ```bash
 cd cert
+rm *.pem
 mkcert app.london-man.com london-man.com "*.london-man.com" dev.london-man.com
 mv app.london-man.com+3-key.pem key.pem
 mv app.london-man.com+3.pem cert.pem
 ```
-and push it to secrets
-```bash
-kubectl create secret tls app.london-man.com.tls --key key.pem --cert cert.pem -n first
-```
 
-the certs should be ok now
 
-Also push the env as config maps. we are going to ignore the sample postgres password and will use secrets for that.
 
-```bash
-kubectl create configmap -n first webapp-envs --from-env-file .env
-```
 
-create database secret
-```
-kubectl create secret generic database-password --from-literal=POSTGRES_PASSWORD=asecretvalue -n first
-```
 
 for google cloud, create an ip address:
 ```bash

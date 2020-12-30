@@ -17,20 +17,23 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
+apply:
+	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
+
 push:
 	@docker build -f Dockerfile.app --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
 	@docker build -f Dockerfile.frontend --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/sapper-frontend:$(FAL_VER) .
 	@docker push farshidashouri/fal:$(FAL_VER)
 	@docker push farshidashouri/sapper-frontend:$(FAL_VER)
-	@kubectl create configmap -n first webapp-envs --from-env-file .env --dry-run -o yaml | kubectl apply -n first -f -
-	@kubectl create secret tls london-man.tls --key cert/key.pem --cert cert/cert.pem -n first --dry-run -o yaml | kubectl apply -n first -f -
+	@kubectl create namespace first --dry-run=client -o yaml | kubectl apply -f -
+	@kubectl create configmap -n first webapp-envs --from-env-file .env --dry-run=client -o yaml | kubectl apply -n first -f -
+	@kubectl create secret tls london-man.tls --key cert/key.pem --cert cert/cert.pem -n first --dry-run=client -o yaml | kubectl apply -n first -f -
+	@kubectl create secret generic database-password --from-literal=POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) -n first --dry-run=client -o yaml | kubectl apply -n first -f -
 	@make apply
 	@kubectl rollout status --namespace=first deployment webapp
 	@kubectl rollout status --namespace=first deployment frontend
 	@make status
 
-apply:
-	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
 
 status:
 	@kubectl get deployments,services,ingress -o wide --namespace=first

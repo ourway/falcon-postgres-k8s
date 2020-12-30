@@ -46,6 +46,7 @@ services:
 
     volumes:
       - ./app:/app/dev
+      - ./data:/data
 
     deploy:
         resources:

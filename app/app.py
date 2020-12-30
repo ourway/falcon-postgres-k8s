@@ -3,6 +3,8 @@ main application
 """
 import os
 from datetime import datetime
+from glob import glob
+from utils import save_random_image
 
 import falcon
 
@@ -54,7 +56,15 @@ class HitCountResource:
             resp.media = result
 
 
+class StorageResource:
+    def on_get(self, req: falcon.Request, resp: falcon.Response) -> None:
+        """fill storage with random data and list files"""
+        save_random_image()
+        resp.media = {"response": glob("/data/*.jpg")}
+
+
 application = falcon.API()
 application.add_route("/ping", QuoteResource())
 application.add_route("/servertime", ServerTimeResource())
 application.add_route("/hitcount", HitCountResource())
+application.add_route("/storage", StorageResource())

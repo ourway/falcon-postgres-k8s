@@ -34,4 +34,4 @@ syntax on' \
 
 EXPOSE 80
 
-ENTRYPOINT ["gunicorn", "app", "-b", "0.0.0.0:80", "--reload", "--log-level", "debug"]
+ENTRYPOINT ["sh", "run-dev.sh"]

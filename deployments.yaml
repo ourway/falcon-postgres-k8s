@@ -16,7 +16,14 @@ spec:
       containers:
       - name: webapp
         image: farshidashouri/fal:{{FAL_VER}}
-
+        volumeMounts:
+          - name: webapp-persistant-storage
+            mountPath: /data
+      volumes:
+        - name: webapp-persistant-storate
+          hostPath:
+            path: /mnt/webapp-storage/
+            type: DirectoryOrCreate
 
 ---
 apiVersion: apps/v1

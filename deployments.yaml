@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,14 +14,30 @@ spec:
         label-name: webapp
         release: "{{FAL_VER}}"
     spec:
+      initContainers:
+        - name: check-db-ready
+          image: postgres:12
+          command: ['sh', '-c',
+                    'until pg_isready -h database -p 5432;
+                     do echo waiting for database; sleep 2; done;']
+        - name: run-alembic-migrations
+          image: farshidashouri/fal:{{FAL_VER}}
+          envFrom:
+            - configMapRef:
+                name: webapp-envs
+          command: ['sh', '-c',
+                    'alembic upgrade head']
       containers:
-      - name: webapp
-        image: farshidashouri/fal:{{FAL_VER}}
-        volumeMounts:
-          - name: webapp-persistant-storage
-            mountPath: /data
+        - name: webapp
+          image: farshidashouri/fal:{{FAL_VER}}
+          envFrom:
+            - configMapRef:
+                name: webapp-envs
+          volumeMounts:
+            - name: webapp-persistant-storage
+              mountPath: /data
       volumes:
-        - name: webapp-persistant-storate
+        - name: webapp-persistant-storage
           hostPath:
             path: /mnt/webapp-storage/
             type: DirectoryOrCreate
@@ -42,24 +59,5 @@ spec:
         release: "{{FAL_VER}}"
     spec:
       containers:
-      - name: frontend
-        image: farshidashouri/sapper-frontend:{{FAL_VER}}
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: queue
-spec:
-  selector:
-    matchLabels:
-      label-name: queue
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        label-name: queue
-    spec:
-      containers:
-      - name: queue
-        image: richardchesterwood/k8s-fleetman-queue:release1
+        - name: frontend
+          image: farshidashouri/sapper-frontend:{{FAL_VER}}

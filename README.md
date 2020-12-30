@@ -22,3 +22,14 @@ kubectl create secret tls app.fleetman.com.tls --key key.pem --cert cert.pem -n 
 ```
 
 the certs should be ok now
+
+Also push the env as config maps. we are going to ignore the sample postgres password and will use secrets for that.
+
+```bash
+kubectl create configmap -n first webapp-envs --from-env-file .env
+```
+
+create database secret
+```
+kubectl create secret generic database-password --from-literal=POSTGRES_PASSWORD=asecretvalue -n first
+```

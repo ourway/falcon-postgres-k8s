@@ -4,13 +4,13 @@ main application
 import os
 from datetime import datetime
 from glob import glob
-from utils import save_random_image
 
 import falcon
 
 from constants import TIME_FORMAT
 from db.models import Preferences
 from db.session import session_scope
+from utils import save_random_image
 
 FAL_VER = os.environ["FAL_VER"]
 

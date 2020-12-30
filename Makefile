@@ -1,3 +1,9 @@
+include .env
+export
+
+version:
+	@echo $(FAL_VER)
+
 start:
 	@make clean
 	@docker-compose up --build --remove-orphans -d
@@ -11,16 +17,18 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
-push: export FAL_VER=19
 push:
 	@docker build -f Dockerfile.app --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/fal:$(FAL_VER) .
 	@docker build -f Dockerfile.frontend --target deployment --build-arg FAL_VER=$(FAL_VER) -t farshidashouri/sapper-frontend:$(FAL_VER) .
 	@docker push farshidashouri/fal:$(FAL_VER)
 	@docker push farshidashouri/sapper-frontend:$(FAL_VER)
+	@kubectl create configmap -n first webapp-envs --from-env-file .env --dry-run -o yaml | kubectl apply -n first -f -
+	@kubectl create secret tls fleetman.tls --key cert/key.pem --cert cert/cert.pem -n first --dry-run -o yaml | kubectl apply -n first -f -
 	@cat *.yaml | gsed 's/{{FAL_VER}}/$(FAL_VER)/g' | kubectl apply -f - --namespace=first
 	@kubectl rollout status --namespace=first deployment webapp
 	@kubectl rollout status --namespace=first deployment frontend
 	@make status
+	@sleep 10
 	@make ping
 
 status:
@@ -61,3 +69,5 @@ fmt:
 
 frontend-fmt:
 	@docker-compose exec frontend node node_modules/prettier/bin-prettier.js --write --svelte-sort-order scripts-markup-styles ./**/*.svelte
+validate-yaml:
+	@curl -X POST  --data "data=$(cat *.yaml)" https://www.lint-trilogy.com/lint/yaml/json

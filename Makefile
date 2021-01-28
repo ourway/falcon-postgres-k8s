@@ -7,8 +7,8 @@ version:
 start:
 	@make clean
 	@docker-compose up --build --remove-orphans -d
-	@echo "waiting 10 seconds to start the server"
-	@sleep 10
+	@echo "waiting 2 seconds to start the server"
+	@sleep 2
 
 clean:
 	@docker-compose stop

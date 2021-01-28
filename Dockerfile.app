@@ -8,6 +8,7 @@ ENV FAL_VER=$FAL_VER
 COPY app/. .
 
 RUN pip install -r requirements.txt
+CMD ["alembic", "upgrade", "head"]
 
 EXPOSE 80
 
